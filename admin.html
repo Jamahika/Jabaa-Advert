@@ -1,0 +1,766 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jabaa Printing and Advert - Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background-color: #0f172a;
+        color: #f8fafc;
+      }
+      .glass {
+        background: rgba(30, 41, 59, 0.8);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .dark-card {
+        background: #1e293b;
+        border: 1px solid #334155;
+      }
+      .emoji-btn {
+        transition:
+          transform 0.1s,
+          background-color 0.1s;
+      }
+      .emoji-btn:hover {
+        transform: scale(1.1);
+        background-color: rgba(59, 130, 246, 0.2);
+      }
+      .emoji-btn.selected {
+        background-color: rgba(59, 130, 246, 0.4);
+        border-color: #3b82f6;
+      }
+    </style>
+  </head>
+  <body class="text-slate-100 min-h-screen flex flex-col justify-between">
+    <nav class="sticky top-0 z-50 glass">
+      <div
+        class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center"
+      >
+        <div class="flex items-center gap-2">
+          <img
+            src="images/jabaaa.jpg"
+            alt="Logo"
+            class="w-8 h-8 rounded-full border border-slate-700"
+            onerror="this.style.display = 'none'"
+          />
+          <h1 class="text-lg font-extrabold text-white tracking-tight">
+            Jabaa Printing and Advert Admin
+          </h1>
+        </div>
+        <div class="flex items-center gap-3 font-medium text-sm">
+          <a
+            href="index.html"
+            class="text-slate-400 hover:text-white transition"
+            >← Back to Website</a
+          >
+          <button
+            id="logoutBtn"
+            onclick="handleLogout()"
+            class="hidden bg-red-600/20 text-red-400 border border-red-500/30 px-3 py-1.5 rounded-lg hover:bg-red-600/30 transition"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-4 py-12 w-full flex-grow">
+      <!-- LOGIN SECTION -->
+      <section
+        id="loginSection"
+        class="max-w-md mx-auto dark-card p-8 rounded-3xl shadow-xl mt-10"
+      >
+        <div class="text-center mb-6">
+          <h2 class="text-2xl font-bold">Staff / CEO Login</h2>
+          <p class="text-sm text-slate-400 mt-1">
+            Enter your management credentials to access tools.
+          </p>
+        </div>
+        <div class="space-y-4">
+          <div>
+            <label
+              class="block text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider"
+              >Username</label
+            >
+            <input
+              type="text"
+              id="adminUser"
+              placeholder="username"
+              class="w-full p-4 rounded-xl border bg-slate-800 border-slate-700 text-white outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+            />
+          </div>
+          <div>
+            <label
+              class="block text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider"
+              >Password</label
+            >
+            <input
+              type="password"
+              id="adminPass"
+              placeholder="..."
+              class="w-full p-4 rounded-xl border bg-slate-800 border-slate-700 text-white outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+            />
+          </div>
+          <button
+            type="button"
+            onclick="handleLogin()"
+            class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl hover:bg-blue-500 transition text-sm"
+          >
+            Login to Dashboard
+          </button>
+        </div>
+      </section>
+
+      <!-- DASHBOARD SECTION -->
+      <section id="dashboardSection" class="hidden space-y-8">
+        <div
+          class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-900 p-6 rounded-2xl border border-slate-800 gap-4"
+        >
+          <div>
+            <h2 class="text-2xl font-bold">Welcome, Manager</h2>
+            <p class="text-sm text-slate-400">
+              Manage prices, add fresh products, upload photos, and control
+              active services or delete images below.
+            </p>
+          </div>
+          <span
+            class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-xs px-3 py-1 rounded-full font-semibold"
+            >● Active Session</span
+          >
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <!-- UPDATE PRICE CARD -->
+          <div class="dark-card p-6 rounded-2xl shadow-sm">
+            <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+              <span>💲</span> Update Size Price
+            </h3>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-400 mb-1"
+                  >Select Product / Service</label
+                >
+                <select
+                  id="priceItemSelect"
+                  class="w-full p-3 rounded-xl border bg-slate-800 border-slate-700 text-white outline-none text-sm"
+                >
+                  <!-- Dynamically populated options -->
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-400 mb-1"
+                  >Size / Dimension Name (e.g., 20*30 or Large)</label
+                >
+                <input
+                  type="text"
+                  id="priceSizeInput"
+                  placeholder="e.g. 20*30"
+                  class="w-full p-3 rounded-xl border bg-slate-800 border-slate-700 text-white outline-none text-sm"
+                />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-400 mb-1"
+                  >New Price (e.g., 350 Birr)</label
+                >
+                <input
+                  type="text"
+                  id="newPriceInput"
+                  placeholder="e.g. 350 Birr"
+                  class="w-full p-3 rounded-xl border bg-slate-800 border-slate-700 text-white outline-none text-sm"
+                />
+              </div>
+              <button
+                type="button"
+                onclick="saveSizePriceUpdate()"
+                class="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-semibold py-3 rounded-xl transition text-sm"
+              >
+                Save Size Price
+              </button>
+            </div>
+          </div>
+
+          <!-- UPLOAD GALLERY PHOTO CARD -->
+          <div class="dark-card p-6 rounded-2xl shadow-sm">
+            <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+              <span>📸</span> Upload Gallery Photo
+            </h3>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-400 mb-1"
+                  >Choose Category</label
+                >
+                <select
+                  id="galleryCategory"
+                  class="w-full p-3 rounded-xl border bg-slate-800 border-slate-700 text-white outline-none text-sm"
+                >
+                  <!-- Dynamically populated options -->
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-400 mb-1"
+                  >Select Image File (From Phone or Computer)</label
+                >
+                <input
+                  type="file"
+                  id="imageFileInput"
+                  accept="image/*"
+                  class="w-full p-2 rounded-xl border bg-slate-800 border-slate-700 text-white outline-none text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer"
+                />
+              </div>
+              <button
+                type="button"
+                onclick="saveGalleryPhoto()"
+                class="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-semibold py-3 rounded-xl transition text-sm"
+              >
+                Add to Gallery Store
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ADD NEW SERVICE OR PRODUCT CARD -->
+        <div class="dark-card p-6 rounded-2xl shadow-sm">
+          <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+            <span>✨</span> Add New Service / Category
+          </h3>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-400 mb-1"
+                >Product Name</label
+              >
+              <input
+                type="text"
+                id="newProdName"
+                placeholder="e.g. Custom Banner"
+                class="w-full p-3 rounded-xl border bg-slate-800 border-slate-700 text-white outline-none text-sm"
+              />
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-400 mb-1"
+                >Select Icon for Service</label
+              >
+              <input type="hidden" id="selectedEmoji" value="📦" />
+              <div
+                class="grid grid-cols-8 sm:grid-cols-12 gap-2 p-3 bg-slate-800 border border-slate-700 rounded-xl"
+                id="emojiPickerGrid"
+              >
+                <!-- Dynamically populated emojis -->
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onclick="addNewProduct()"
+              class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl transition text-sm"
+            >
+              Publish New Product
+            </button>
+          </div>
+        </div>
+
+        <!-- MANAGE SERVICES & DELETE PHOTOS CARD -->
+        <div class="dark-card p-6 rounded-2xl shadow-sm space-y-6">
+          <h3 class="text-lg font-bold flex items-center gap-2">
+            <span>⚙️</span> Manage Services & Images
+          </h3>
+
+          <!-- Delete Service Section -->
+          <div class="border-b border-slate-700 pb-6">
+            <label class="block text-xs font-semibold text-slate-400 mb-2"
+              >Stop / Delete Active Service</label
+            >
+            <div class="flex flex-col sm:flex-row gap-3">
+              <select
+                id="deleteServiceSelect"
+                class="flex-grow p-3 rounded-xl border bg-slate-800 border-slate-700 text-white outline-none text-sm"
+              >
+                <!-- Dynamically populated -->
+              </select>
+              <button
+                type="button"
+                onclick="deleteService()"
+                class="bg-red-600/20 text-red-400 border border-red-500/30 hover:bg-red-600/30 font-semibold px-6 py-3 rounded-xl transition text-sm whitespace-nowrap"
+              >
+                Remove Service
+              </button>
+            </div>
+          </div>
+
+          <!-- Delete Images Section -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-400 mb-2"
+              >Select Category to View & Delete Photos</label
+            >
+            <select
+              id="manageImageCatSelect"
+              onchange="loadImagesForDeletion()"
+              class="w-full p-3 rounded-xl border bg-slate-800 border-slate-700 text-white outline-none text-sm mb-4"
+            >
+              <!-- Dynamically populated -->
+            </select>
+            <div
+              id="adminImageGrid"
+              class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-h-60 overflow-y-auto p-2 bg-slate-900 rounded-xl border border-slate-800"
+            >
+              <!-- Dynamically populated gallery images with delete buttons -->
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer
+      class="bg-slate-950 py-8 px-6 border-t border-slate-800 text-center text-slate-600 text-xs"
+    >
+      &copy; 2026 Jabaa Printing and Advert Admin Panel. Secure Management
+      Console.
+    </footer>
+
+    <script>
+      const baseServices = [
+        { name: "Stiker Photo", emoji: "🖼️" },
+        { name: "T-Shirt", emoji: "👕" },
+        { name: "Mug", emoji: "☕" },
+        { name: "Hat/Pen", emoji: "🖊️" },
+        { name: "Epoxy", emoji: "✨" },
+        { name: "Wall Art", emoji: "🎨" },
+      ];
+
+      const availableEmojis = [
+        "🖼️",
+        "👕",
+        "☕",
+        "🖊️",
+        "✨",
+        "🎨",
+        "🚩",
+        "📜",
+        "🧢",
+        "🎒",
+        "🎁",
+        "📌",
+        "🏷️",
+        "💼",
+        "💡",
+        "⭐",
+        "🔮",
+        "📐",
+      ];
+
+      window.onload = function () {
+        const grid = document.getElementById("emojiPickerGrid");
+        if (grid) {
+          availableEmojis.forEach((emoji, index) => {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.innerText = emoji;
+            btn.className = `emoji-btn text-2xl p-2 rounded-lg border border-transparent flex items-center justify-center ${index === 0 ? "selected" : ""}`;
+
+            btn.onclick = () => {
+              document
+                .querySelectorAll(".emoji-btn")
+                .forEach((b) => b.classList.remove("selected"));
+              btn.classList.add("selected");
+              document.getElementById("selectedEmoji").value = emoji;
+            };
+            grid.appendChild(btn);
+          });
+        }
+        updateAdminDropdowns();
+      };
+
+      function getAllServices() {
+        const customProducts = JSON.parse(
+          localStorage.getItem("jabaa_custom_products") || "[]",
+        );
+        const hiddenServices = JSON.parse(
+          localStorage.getItem("jabaa_hidden_services") || "[]",
+        );
+        const all = [...baseServices, ...customProducts];
+        return all.filter((s) => !hiddenServices.includes(s.name));
+      }
+
+      function updateAdminDropdowns() {
+        const services = getAllServices();
+
+        // 1. Price item select
+        const priceSelect = document.getElementById("priceItemSelect");
+        if (priceSelect) {
+          priceSelect.innerHTML = "";
+          services.forEach((s) => {
+            const opt = document.createElement("option");
+            opt.value = s.name;
+            opt.innerText = s.name;
+            priceSelect.appendChild(opt);
+          });
+        }
+
+        // 2. Gallery Category select
+        const gallerySelect = document.getElementById("galleryCategory");
+        if (gallerySelect) {
+          gallerySelect.innerHTML = "";
+          services.forEach((s) => {
+            const opt = document.createElement("option");
+            opt.value = s.name;
+            opt.innerText = s.name;
+            gallerySelect.appendChild(opt);
+          });
+        }
+
+        // 3. Delete Service select
+        const deleteSelect = document.getElementById("deleteServiceSelect");
+        if (deleteSelect) {
+          deleteSelect.innerHTML = "";
+          services.forEach((s) => {
+            const opt = document.createElement("option");
+            opt.value = s.name;
+            opt.innerText = s.name;
+            deleteSelect.appendChild(opt);
+          });
+        }
+
+        // 4. Manage Image Category select
+        const manageImgSelect = document.getElementById("manageImageCatSelect");
+        if (manageImgSelect) {
+          manageImgSelect.innerHTML = "";
+          services.forEach((s) => {
+            const opt = document.createElement("option");
+            opt.value = s.name;
+            opt.innerText = s.name;
+            manageImgSelect.appendChild(opt);
+          });
+        }
+
+        loadImagesForDeletion();
+      }
+
+      function handleLogin() {
+        const user = document.getElementById("adminUser").value.trim();
+        const pass = document.getElementById("adminPass").value.trim();
+
+        if (user === "admin" && pass === "jabaa2026") {
+          document.getElementById("loginSection").classList.add("hidden");
+          document
+            .getElementById("dashboardSection")
+            .classList.remove("hidden");
+          document.getElementById("logoutBtn").classList.remove("hidden");
+          updateAdminDropdowns();
+          alert("✅ Login Successful!");
+        } else {
+          alert("❌ Invalid username or password (use admin / jabaa2026)");
+        }
+      }
+
+      function handleLogout() {
+        document.getElementById("dashboardSection").classList.add("hidden");
+        document.getElementById("logoutBtn").classList.add("hidden");
+        document.getElementById("loginSection").classList.remove("hidden");
+        document.getElementById("adminUser").value = "";
+        document.getElementById("adminPass").value = "";
+      }
+
+      function saveSizePriceUpdate() {
+        const item = document.getElementById("priceItemSelect").value;
+        const size = document.getElementById("priceSizeInput").value.trim();
+        const price = document.getElementById("newPriceInput").value.trim();
+
+        if (!size || !price) {
+          alert("⚠️ Please enter both the size name and the new price.");
+          return;
+        }
+
+        let prices = JSON.parse(
+          localStorage.getItem("jabaa_size_prices") || "{}",
+        );
+        if (!prices[item]) {
+          prices[item] = {};
+        }
+
+        prices[item][size] = price;
+        localStorage.setItem("jabaa_size_prices", JSON.stringify(prices));
+
+        document.getElementById("priceSizeInput").value = "";
+        document.getElementById("newPriceInput").value = "";
+        alert(
+          `✅ SUCCESS! For ${item}, size "${size}" is now updated to "${price}".`,
+        );
+      }
+
+      function saveGalleryPhoto() {
+        const cat = document.getElementById("galleryCategory").value;
+        const fileInput = document.getElementById("imageFileInput");
+
+        if (!fileInput.files || fileInput.files.length === 0) {
+          alert("⚠️ Please choose an image file first.");
+          return;
+        }
+
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+          const img = new Image();
+          img.onload = function () {
+            const canvas = document.createElement("canvas");
+            let width = img.width;
+            let height = img.height;
+            const MAX = 800;
+
+            if (width > height && width > MAX) {
+              height *= MAX / width;
+              width = MAX;
+            } else if (height > MAX) {
+              width *= MAX / height;
+              height = MAX;
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height);
+
+            const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.7);
+
+            let gallery = JSON.parse(
+              localStorage.getItem("jabaa_gallery") || "{}",
+            );
+            if (!gallery[cat]) gallery[cat] = [];
+            gallery[cat].push(compressedDataUrl);
+            localStorage.setItem("jabaa_gallery", JSON.stringify(gallery));
+
+            fileInput.value = "";
+            loadImagesForDeletion();
+            alert(
+              `✅ SUCCESS! Photo uploaded to "${cat}" category. Open index.html to see your image in the live gallery!`,
+            );
+          };
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function addNewProduct() {
+        const nameInput = document.getElementById("newProdName");
+        const emojiInput = document.getElementById("selectedEmoji");
+        const name = nameInput.value.trim();
+        const emoji = emojiInput ? emojiInput.value : "📦";
+
+        if (!name) {
+          alert("⚠️ Please enter a product name.");
+          return;
+        }
+
+        let products = JSON.parse(
+          localStorage.getItem("jabaa_custom_products") || "[]",
+        );
+        // Check if already exists
+        if (
+          products.some((p) => p.name.toLowerCase() === name.toLowerCase()) ||
+          baseServices.some((s) => s.name.toLowerCase() === name.toLowerCase())
+        ) {
+          alert("⚠️ A service or product with this name already exists.");
+          return;
+        }
+
+        products.push({ name, emoji });
+        localStorage.setItem("jabaa_custom_products", JSON.stringify(products));
+
+        let prices = JSON.parse(localStorage.getItem("jabaa_prices") || "{}");
+        if (!prices[name]) {
+          prices[name] = "Contact for Price";
+          localStorage.setItem("jabaa_prices", JSON.stringify(prices));
+        }
+
+        nameInput.value = "";
+        updateAdminDropdowns();
+        alert(
+          `✅ SUCCESS! New product "${name}" added to category lists and client homepage!`,
+        );
+      }
+
+      function deleteService() {
+        const select = document.getElementById("deleteServiceSelect");
+        if (!select || !select.value) return;
+        const targetService = select.value;
+
+        if (
+          !confirm(
+            `Are you sure you want to stop working with "${targetService}"? It will be removed from client view.`,
+          )
+        ) {
+          return;
+        }
+
+        let hiddenServices = JSON.parse(
+          localStorage.getItem("jabaa_hidden_services") || "[]",
+        );
+        if (!hiddenServices.includes(targetService)) {
+          hiddenServices.push(targetService);
+          localStorage.setItem(
+            "jabaa_hidden_services",
+            JSON.stringify(hiddenServices),
+          );
+        }
+
+        updateAdminDropdowns();
+        alert(
+          `✅ SUCCESS! Service "${targetService}" has been stopped and hidden from clients.`,
+        );
+      }
+
+      const defaultImagesMap = {
+        "Stiker Photo": [
+          "images/20260801_134305.jpg",
+          "images/20260801_183644.jpg",
+          "images/20260801_183722.jpg",
+          "images/20260801_183740.jpg",
+          "images/20260801_183757.jpg",
+        ],
+        "T-Shirt": [
+          "images/ts.jpg",
+          "images/ts1.jpg",
+          "images/ts2.jpg",
+          "images/ts3.jpg",
+          "images/ts4.jpg",
+          "images/ts5.jpg",
+          "images/ts6.jpg",
+          "images/ts7.jpg",
+          "images/ts8.jpg",
+          "images/ts9.jpg",
+          "images/ts10.jpg",
+          "images/ts11.jpg",
+        ],
+        Mug: [
+          "images/mug8.jpg",
+          "images/mug.jpg",
+          "images/mug1.jpg",
+          "images/mug2.jpg",
+          "images/mug3.jpg",
+          "images/mug4.jpg",
+          "images/mug5.jpg",
+          "images/mug6.jpg",
+          "images/mug7.jpg",
+          "images/mug9.jpg",
+          "images/mug10.jpg",
+          "images/mug11.jpg",
+        ],
+        "Hat/Pen": [
+          "images/hat.jpg",
+          "images/hat1.jpg",
+          "images/hat2.jpg",
+          "images/hat4.jpg",
+          "images/hat5.jpg",
+          "images/hat6.jpg",
+          "images/pen.jpg",
+          "images/pen1.jpg",
+          "images/pen2.jpg",
+        ],
+        Epoxy: [],
+        "Wall Art": [
+          "images/wall.jpg",
+          "images/wall1.jpg",
+          "images/wall2.jpg",
+          "images/wall3.jpg",
+          "images/wall4.jpg",
+          "images/wall5.jpg",
+          "images/wall6.jpg",
+          "images/wall7.jpg",
+          "images/wall8.jpg",
+          "images/wall9.jpg",
+          "images/wall10.jpg",
+          "images/wall11.jpg",
+        ],
+      };
+
+      function loadImagesForDeletion() {
+        const catSelect = document.getElementById("manageImageCatSelect");
+        const grid = document.getElementById("adminImageGrid");
+        if (!catSelect || !grid) return;
+
+        const cat = catSelect.value;
+        grid.innerHTML = "";
+
+        const adminGallery = JSON.parse(
+          localStorage.getItem("jabaa_gallery") || "{}",
+        );
+        const customDeletedDefaults = JSON.parse(
+          localStorage.getItem("jabaa_deleted_defaults") || "{}",
+        );
+
+        const defaultList = defaultImagesMap[cat] || [];
+        const filteredDefaults = defaultList.filter((img) => {
+          return !(
+            customDeletedDefaults[cat] &&
+            customDeletedDefaults[cat].includes(img)
+          );
+        });
+
+        const adminList = adminGallery[cat] || [];
+
+        const allImages = [
+          ...filteredDefaults.map((url) => ({ type: "default", path: url })),
+          ...adminList.map((url, index) => ({
+            type: "admin",
+            path: url,
+            index: index,
+          })),
+        ];
+
+        if (allImages.length === 0) {
+          grid.innerHTML =
+            '<p class="text-xs text-slate-500 col-span-full text-center py-4">No images in this category.</p>';
+          return;
+        }
+
+        allImages.forEach((imgObj) => {
+          const card = document.createElement("div");
+          card.className =
+            "relative aspect-square rounded-lg overflow-hidden border border-slate-700 bg-slate-800 group";
+          card.innerHTML = `
+            <img src="${imgObj.path}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/150x150/1e293b/ffffff?text=Image'">
+            <button type="button" onclick="deleteSpecificImage('${cat}', '${imgObj.type}', ${imgObj.type === "admin" ? imgObj.index : "'" + imgObj.path + "'"})" class="absolute inset-0 bg-red-600/80 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white font-bold text-xs gap-1">
+              🗑️ Delete
+            </button>
+          `;
+          grid.appendChild(card);
+        });
+      }
+
+      function deleteSpecificImage(cat, type, identifier) {
+        if (!confirm("Are you sure you want to delete this image?")) return;
+
+        if (type === "admin") {
+          let adminGallery = JSON.parse(
+            localStorage.getItem("jabaa_gallery") || "{}",
+          );
+          if (adminGallery[cat]) {
+            adminGallery[cat].splice(identifier, 1);
+            localStorage.setItem("jabaa_gallery", JSON.stringify(adminGallery));
+          }
+        } else if (type === "default") {
+          let deletedDefaults = JSON.parse(
+            localStorage.getItem("jabaa_deleted_defaults") || "{}",
+          );
+          if (!deletedDefaults[cat]) deletedDefaults[cat] = [];
+          deletedDefaults[cat].push(identifier);
+          localStorage.setItem(
+            "jabaa_deleted_defaults",
+            JSON.stringify(deletedDefaults),
+          );
+        }
+
+        loadImagesForDeletion();
+        alert("✅ Image deleted successfully!");
+      }
+    </script>
+  </body>
+</html>

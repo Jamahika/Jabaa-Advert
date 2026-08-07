@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jabaa Printing and Advert</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background-color: #0f172a;
+        color: #f8fafc;
+      }
+      .glass {
+        background: rgba(30, 41, 59, 0.8);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .modal {
+        display: none;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        background: rgba(0, 0, 0, 0.9);
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+      }
+      .modal.active {
+        display: flex;
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 12px;
+      }
+      .gallery-item {
+        background: #1e293b;
+        aspect-ratio: 1;
+        border-radius: 12px;
+        border: 1px solid #334155;
+        overflow: hidden;
+      }
+      .dark-card {
+        background: #1e293b;
+        border: 1px solid #334155;
+      }
+      .error-msg {
+        color: #f87171;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+        display: none;
+      }
+    </style>
+  </head>
+  <body class="text-slate-100">
+    <nav class="sticky top-0 z-50 glass">
+      <div
+        class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center"
+      >
+        <div class="flex items-center gap-2">
+          <img
+            src="images/jabaaa.jpg"
+            alt="Logo"
+            class="w-8 h-8 rounded-full border border-slate-700"
+            onerror="this.style.display = 'none'"
+          />
+          <h1 class="text-lg font-extrabold text-white tracking-tight truncate">
+            Jabaa Printing and Advert
+          </h1>
+        </div>
+        <div class="flex items-center gap-3 font-medium text-sm">
+          <a
+            href="#services"
+            class="hover:text-blue-400 transition hidden sm:block"
+            >Services</a
+          >
+          <a
+            href="#order"
+            class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-500 transition"
+            >Order Now</a
+          >
+          <a
+            href="admin.html"
+            class="text-slate-400 hover:text-blue-400 transition text-sm"
+            >⚙️ Admin</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <header
+      class="relative bg-slate-900 py-24 px-6 text-center border-b border-slate-800"
+    >
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-5xl md:text-6xl font-extrabold mb-6">
+          Your Vision, <span class="text-blue-500">Perfectly Printed.</span>
+        </h2>
+        <p class="text-xl text-slate-400 mb-6">
+          Premium printing, custom apparel, and expert epoxy/wall art services.
+        </p>
+        <p class="text-md font-semibold text-blue-400 mb-10">
+          📍 Oromia Region, Nekemte Town, in front of Ethiopia Hotel
+        </p>
+        <div
+          class="flex flex-col md:flex-row justify-center gap-4 text-slate-200"
+        >
+          <div
+            class="bg-slate-800 px-6 py-3 rounded-xl border border-slate-700"
+          >
+            📞 0953293652
+          </div>
+          <a
+            href="https://t.me/Grace7PR"
+            target="_blank"
+            class="bg-blue-600/10 border border-blue-500/50 hover:bg-blue-600/20 px-6 py-3 rounded-xl transition text-blue-400 font-semibold flex items-center justify-center gap-2"
+          >
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.05-.2-.06-.06-.15-.04-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.4-1.08.39-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.1 5.83-2.5 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06 0 .12-.01.2z"
+              />
+            </svg>
+            Telegram
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <section id="services" class="py-20 px-6 max-w-6xl mx-auto">
+      <h3 class="text-3xl font-bold text-center mb-16">
+        Our Specialized Services
+      </h3>
+      <div
+        id="servicesGrid"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+      >
+        <!-- Dynamically rendered services + admin custom products (excluding hidden services) -->
+      </div>
+    </section>
+
+    <section id="order" class="py-20 px-6">
+      <div
+        class="max-w-xl mx-auto bg-slate-900 p-10 rounded-3xl border border-slate-800 shadow-xl"
+      >
+        <h3 class="text-3xl font-bold text-center mb-8">Place Your Order</h3>
+        <select
+          id="itemSelect"
+          onchange="updateFormFields()"
+          class="w-full p-4 rounded-xl mb-4 border bg-slate-800 border-slate-700 text-white focus:ring-2 focus:ring-blue-500 outline-none"
+        >
+          <!-- Dynamically populated options -->
+        </select>
+
+        <div id="dynamicFields"></div>
+        <div id="validationError" class="error-msg">
+          Please fill in all required fields.
+        </div>
+
+        <textarea
+          id="orderNote"
+          class="w-full p-4 rounded-xl mb-4 border bg-slate-800 border-slate-700 text-white outline-none h-24"
+          placeholder="Additional details (Optional)"
+        ></textarea>
+        <button
+          onclick="sendOrder()"
+          class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl hover:bg-blue-500 transition text-lg"
+        >
+          Send Order via Telegram
+        </button>
+      </div>
+    </section>
+
+    <div id="galleryModal" class="modal">
+      <div
+        class="bg-slate-900 border border-slate-700 p-8 rounded-3xl max-w-2xl w-full max-h-[80vh] overflow-y-auto"
+      >
+        <div class="flex justify-between items-center mb-6">
+          <h3 id="modalTitle" class="text-2xl font-bold">Gallery</h3>
+          <button
+            onclick="closeGallery()"
+            class="text-slate-400 hover:text-white text-3xl"
+          >
+            &times;
+          </button>
+        </div>
+        <div id="modalContent" class="gallery-grid"></div>
+      </div>
+    </div>
+
+    <footer class="bg-slate-950 py-12 px-6 border-t border-slate-800 mt-12">
+      <div
+        class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 text-center md:text-left"
+      >
+        <div class="space-y-2">
+          <img
+            src="images/jabaaa.jpg"
+            alt="Logo"
+            class="w-8 h-8 rounded-full border border-slate-700"
+            onerror="this.style.display = 'none'"
+          />
+          <h1 class="text-lg font-extrabold text-white tracking-tight truncate">
+            Jabaa Printing and Advert
+          </h1>
+          <p class="text-slate-500 text-sm">Quality prints for every vision.</p>
+        </div>
+        <div class="flex gap-6">
+          <a
+            href="https://t.me/Grace7PR"
+            target="_blank"
+            class="text-slate-400 hover:text-blue-400 transition text-sm"
+            >Telegram</a
+          >
+          <a
+            href="#services"
+            class="text-slate-400 hover:text-blue-400 transition text-sm"
+            >Services</a
+          >
+          <a
+            href="#order"
+            class="text-slate-400 hover:text-blue-400 transition text-sm"
+            >Order Now</a
+          >
+        </div>
+        <div class="text-slate-600 text-xs">
+          &copy; 2026 Jabaa Printing and Advert. All rights reserved.
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const defaultImages = {
+        "Stiker Photo": [
+          "images/20260801_134305.jpg",
+          "images/20260801_183644.jpg",
+          "images/20260801_183722.jpg",
+          "images/20260801_183740.jpg",
+          "images/20260801_183757.jpg",
+        ],
+        "T-Shirt": [
+          "images/ts.jpg",
+          "images/ts1.jpg",
+          "images/ts2.jpg",
+          "images/ts3.jpg",
+          "images/ts4.jpg",
+          "images/ts5.jpg",
+          "images/ts6.jpg",
+          "images/ts7.jpg",
+          "images/ts8.jpg",
+          "images/ts9.jpg",
+          "images/ts10.jpg",
+          "images/ts11.jpg",
+        ],
+        Mug: [
+          "images/mug8.jpg",
+          "images/mug.jpg",
+          "images/mug1.jpg",
+          "images/mug2.jpg",
+          "images/mug3.jpg",
+          "images/mug4.jpg",
+          "images/mug5.jpg",
+          "images/mug6.jpg",
+          "images/mug7.jpg",
+          "images/mug9.jpg",
+          "images/mug10.jpg",
+          "images/mug11.jpg",
+        ],
+        "Hat/Pen": [
+          "images/hat.jpg",
+          "images/hat1.jpg",
+          "images/hat2.jpg",
+          "images/hat4.jpg",
+          "images/hat5.jpg",
+          "images/hat6.jpg",
+          "images/pen.jpg",
+          "images/pen1.jpg",
+          "images/pen2.jpg",
+        ],
+        Epoxy: [],
+        "Wall Art": [
+          "images/wall.jpg",
+          "images/wall1.jpg",
+          "images/wall2.jpg",
+          "images/wall3.jpg",
+          "images/wall4.jpg",
+          "images/wall5.jpg",
+          "images/wall6.jpg",
+          "images/wall7.jpg",
+          "images/wall8.jpg",
+          "images/wall9.jpg",
+          "images/wall10.jpg",
+          "images/wall11.jpg",
+        ],
+      };
+
+      const baseServices = [
+        { name: "Stiker Photo", emoji: "🖼️" },
+        { name: "T-Shirt", emoji: "👕" },
+        { name: "Mug", emoji: "☕" },
+        { name: "Hat/Pen", emoji: "🖊️" },
+        { name: "Epoxy", emoji: "✨" },
+        { name: "Wall Art", emoji: "🎨" },
+      ];
+
+      function getActiveServices() {
+        const customProducts = JSON.parse(
+          localStorage.getItem("jabaa_custom_products") || "[]",
+        );
+        const hiddenServices = JSON.parse(
+          localStorage.getItem("jabaa_hidden_services") || "[]",
+        );
+        const all = [...baseServices, ...customProducts];
+        return all.filter((s) => !hiddenServices.includes(s.name));
+      }
+
+      function renderServices() {
+        const grid = document.getElementById("servicesGrid");
+        const select = document.getElementById("itemSelect");
+
+        grid.innerHTML = "";
+        select.innerHTML = "";
+
+        const services = getActiveServices();
+
+        services.forEach((s) => {
+          // Render card in services section
+          const card = document.createElement("div");
+          card.className =
+            "cursor-pointer dark-card p-8 rounded-2xl shadow-sm hover:border-blue-500 transition hover:-translate-y-2 text-center";
+          card.onclick = () => openGallery(s.name);
+          card.innerHTML = `
+            <div class="text-5xl mb-6">${s.emoji}</div>
+            <h4 class="text-xl font-bold mb-2">${s.name}</h4>
+          `;
+          grid.appendChild(card);
+
+          // Add to order dropdown
+          const opt = document.createElement("option");
+          opt.value = s.name;
+          opt.innerText = s.name;
+          select.appendChild(opt);
+        });
+
+        updateFormFields();
+      }
+
+      function updateFormFields() {
+        const selectElement = document.getElementById("itemSelect");
+        if (!selectElement) return;
+
+        const item = selectElement.value;
+        const container = document.getElementById("dynamicFields");
+        container.innerHTML = "";
+
+        const savedSizePrices = JSON.parse(
+          localStorage.getItem("jabaa_size_prices") || "{}",
+        );
+        const customSizes = savedSizePrices[item];
+
+        if (item !== "Wall Art") {
+          container.innerHTML += `<input type="number" id="orderQuantity" placeholder="Quantity" class="w-full p-4 rounded-xl mb-4 border bg-slate-800 border-slate-700 text-white outline-none">`;
+        }
+
+        if (item === "Stiker Photo" || item === "Epoxy" || customSizes) {
+          let optionsHTML = "";
+          if (customSizes && Object.keys(customSizes).length > 0) {
+            for (const [size, price] of Object.entries(customSizes)) {
+              optionsHTML += `<option value="${size} (${price})">${size} (${price})</option>`;
+            }
+          } else {
+            if (item === "Stiker Photo") {
+              optionsHTML = `
+                <option value="20*30 (300 Birr)">20*30 (300 Birr)</option>
+                <option value="40*50 (600 Birr)">40*50 (600 Birr)</option>
+                <option value="50*70 (800 Birr)">50*70 (800 Birr)</option>
+                <option value="50*80 (1000 Birr)">50*80 (1000 Birr)</option>
+              `;
+            } else if (item === "Epoxy") {
+              optionsHTML = `
+                <option value="20*30 (800 Birr)">20*30 (800 Birr)</option>
+                <option value="30*40 (1400 Birr)">30*40 (1400 Birr)</option>
+                <option value="40*50 (1800 Birr)">40*50 (1800 Birr)</option>
+                <option value="50*70 (2300 Birr)">50*70 (2300 Birr)</option>
+                <option value="50*80 (2600 Birr)">50*80 (2600 Birr)</option>
+              `;
+            }
+          }
+
+          if (optionsHTML) {
+            container.innerHTML += `
+              <select id="sizeSelect" class="w-full p-4 rounded-xl mb-4 border bg-slate-800 border-slate-700 text-white outline-none">
+                ${optionsHTML}
+              </select>`;
+          } else if (item === "T-Shirt") {
+            container.innerHTML += `
+              <input type="text" id="tSize" placeholder="Size (e.g. S, M, L...)" class="w-full p-4 rounded-xl mb-4 border bg-slate-800 border-slate-700 text-white outline-none">
+              <select id="tColor" class="w-full p-4 rounded-xl mb-4 border bg-slate-800 border-slate-700 text-white outline-none">
+                  <option value="Green">Green</option><option value="White">White</option><option value="Black">Black</option><option value="Red">Red</option><option value="Gray">Gray</option><option value="Blue">Blue</option><option value="Yellow">Yellow</option><option value="Burgundy">Burgundy</option>
+              </select>
+              <select id="tStyle" class="w-full p-4 rounded-xl mb-4 border bg-slate-800 border-slate-700 text-white outline-none">
+                  <option value="Short Sleeve">Short Sleeve</option><option value="Long Sleeve">Long Sleeve</option>
+              </select>`;
+          } else {
+            container.innerHTML += `<input type="text" id="sizeDetails" placeholder="Size/Details" class="w-full p-4 rounded-xl mb-4 border bg-slate-800 border-slate-700 text-white outline-none">`;
+          }
+        } else if (item === "T-Shirt") {
+          container.innerHTML += `
+            <input type="text" id="tSize" placeholder="Size (e.g. S, M, L...)" class="w-full p-4 rounded-xl mb-4 border bg-slate-800 border-slate-700 text-white outline-none">
+            <select id="tColor" class="w-full p-4 rounded-xl mb-4 border bg-slate-800 border-slate-700 text-white outline-none">
+                <option value="Green">Green</option><option value="White">White</option><option value="Black">Black</option><option value="Red">Red</option><option value="Gray">Gray</option><option value="Blue">Blue</option><option value="Yellow">Yellow</option><option value="Burgundy">Burgundy</option>
+            </select>
+            <select id="tStyle" class="w-full p-4 rounded-xl mb-4 border bg-slate-800 border-slate-700 text-white outline-none">
+                <option value="Short Sleeve">Short Sleeve</option><option value="Long Sleeve">Long Sleeve</option>
+            </select>`;
+        } else {
+          // Custom added product catch-all if no sizes specified
+          container.innerHTML += `<input type="text" id="sizeDetails" placeholder="Specifications / Details" class="w-full p-4 rounded-xl mb-4 border bg-slate-800 border-slate-700 text-white outline-none">`;
+        }
+      }
+
+      function openGallery(service) {
+        document.getElementById("modalTitle").innerText = service + " Samples";
+        const container = document.getElementById("modalContent");
+        container.innerHTML = "";
+
+        const adminGallery = JSON.parse(
+          localStorage.getItem("jabaa_gallery") || "{}",
+        );
+        const deletedDefaults = JSON.parse(
+          localStorage.getItem("jabaa_deleted_defaults") || "{}",
+        );
+
+        const defaultList = defaultImages[service] || [];
+        const filteredDefaults = defaultList.filter((img) => {
+          return !(
+            deletedDefaults[service] && deletedDefaults[service].includes(img)
+          );
+        });
+
+        const adminList = adminGallery[service] || [];
+        const images = [...filteredDefaults, ...adminList];
+
+        if (images.length === 0) {
+          container.innerHTML =
+            '<p class="text-slate-500 text-center col-span-full">No samples uploaded yet.</p>';
+        } else {
+          images.forEach((url) => {
+            const div = document.createElement("div");
+            div.className = "gallery-item";
+            div.innerHTML = `<img src="${url}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/200x200/1e293b/ffffff?text=Image'">`;
+            container.appendChild(div);
+          });
+        }
+        document.getElementById("galleryModal").classList.add("active");
+      }
+
+      function closeGallery() {
+        document.getElementById("galleryModal").classList.remove("active");
+      }
+
+      function sendOrder() {
+        const item = document.getElementById("itemSelect").value;
+        const note = document.getElementById("orderNote").value;
+        const qty = document.getElementById("orderQuantity");
+        const size =
+          document.getElementById("sizeSelect") ||
+          document.getElementById("sizeDetails") ||
+          document.getElementById("tSize");
+        const error = document.getElementById("validationError");
+
+        if ((qty && !qty.value) || (size && !size.value)) {
+          error.style.display = "block";
+          return;
+        } else {
+          error.style.display = "none";
+        }
+
+        let message = `Hi Jabaa Printing and Advert! I'd like to order:\n- Item: ${item}`;
+        if (qty) message += `\n- Quantity: ${qty.value}`;
+        if (size) message += `\n- Details: ${size.value}`;
+
+        if (item === "T-Shirt" && document.getElementById("tColor")) {
+          message += `\n- Color: ${document.getElementById("tColor").value}`;
+          if (document.getElementById("tStyle"))
+            message += `\n- Style: ${document.getElementById("tStyle").value}`;
+        }
+        if (note) message += `\n- Notes: ${note}`;
+
+        window.open(
+          `https://t.me/Grace7PR?text=${encodeURIComponent(message)}`,
+          "_blank",
+        );
+      }
+
+      window.addEventListener("DOMContentLoaded", () => {
+        renderServices();
+      });
+    </script>
+  </body>
+</html>
