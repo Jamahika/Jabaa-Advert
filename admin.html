@@ -761,6 +761,56 @@
         loadImagesForDeletion();
         alert("✅ Image deleted successfully!");
       }
+      
+    <!--Updated one -->
+      async function saveGalleryPhoto() {
+  const cat = document.getElementById("galleryCategory").value;
+  const fileInput = document.getElementById("imageFileInput");
+
+  if (!fileInput.files || fileInput.files.length === 0) {
+    alert("⚠️ Please choose an image file first.");
+    return;
+  }
+
+  const file = fileInput.files[0];
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "MY_EXACT_PRESET_NAME"); // 👈 Replace with your preset name
+
+  alert("⏳ Uploading image to Cloudinary... Please wait.");
+
+  try {
+    const response = await fetch(
+      "https://api.cloudinary.com/v1_1/MY_REAL_CLOUD_NAME/image/upload", // 👈 Replace with your cloud name
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const data = await response.json();
+    
+    if (data.secure_url) {
+      const imageUrl = data.secure_url;
+
+      // Save the global image URL to localStorage
+      let gallery = JSON.parse(localStorage.getItem("jabaa_gallery") || "{}");
+      if (!gallery[cat]) gallery[cat] = [];
+      gallery[cat].push(imageUrl);
+      localStorage.setItem("jabaa_gallery", JSON.stringify(gallery));
+
+      fileInput.value = "";
+      loadImagesForDeletion();
+      alert(`✅ SUCCESS! Photo successfully uploaded to the cloud for "${cat}".`);
+    } else {
+      console.error("Cloudinary Error:", data);
+      alert("❌ Upload failed. Make sure your preset mode is set to 'Unsigned'.");
+    }
+  } catch (err) {
+    console.error(err);
+    alert("❌ Network error connecting to Cloudinary.");
+  }
+}
     </script>
   </body>
 </html>
