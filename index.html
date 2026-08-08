@@ -380,8 +380,7 @@
       function closeImageModal() {
         document.getElementById("imageModal").classList.remove("active");
       }
-
-      function sendOrder() {
+function sendOrder() {
         const item = document.getElementById("itemSelect").value;
         const note = document.getElementById("orderNote").value;
         const qty = document.getElementById("orderQuantity");
@@ -405,7 +404,7 @@
         }
         if (note) message += `\n- Notes: ${note}`;
         
-        window.open(`https://t.me/Grace7PR?text=${encodeURIComponent(message)}`, "_blank");
+        window.location.href = `https://t.me/Grace7PR?text=${encodeURIComponent(message)}`;
       }
 
       window.addEventListener("DOMContentLoaded", () => {
