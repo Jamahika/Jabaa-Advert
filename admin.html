@@ -775,13 +775,13 @@
   const file = fileInput.files[0];
   const formData = new FormData();
   formData.append("file", file);
-  formData.append("upload_preset", "MY_EXACT_PRESET_NAME"); // 👈 Replace with your preset name
+  formData.append("upload_preset", "Jabaa_Advert"); // 👈 Replace with your preset name
 
   alert("⏳ Uploading image to Cloudinary... Please wait.");
 
   try {
     const response = await fetch(
-      "https://api.cloudinary.com/v1_1/MY_REAL_CLOUD_NAME/image/upload", // 👈 Replace with your cloud name
+      "https://api.cloudinary.com/v1_1/jayczq68/image/upload", // 👈 Replace with your cloud name
       {
         method: "POST",
         body: formData,
