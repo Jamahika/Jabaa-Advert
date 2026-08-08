@@ -251,7 +251,6 @@
     </footer>
 
     <script>
-      // JSONBin & Cloudinary Settings
       const JSONBIN_BIN_ID = "6a7788e6da38895dfecade0c";
       const JSONBIN_API_KEY = "$2a$10$fY2eFq1ygOH8/EP5JNVb2uYZJo3AKthhYj.jDiDAlpS3jiYwhKDmS";
       const CLOUDINARY_CLOUD_NAME = "jayczq68";
@@ -361,7 +360,7 @@
           updateAdminDropdowns();
           alert("✅ Login Successful & Cloud Synced!");
         } else {
-          alert("❌ Invalid username or password ");
+          alert("❌ Invalid username or password (use admin / jabaa2026)");
         }
       }
 
@@ -394,64 +393,57 @@
         alert(`✅ SUCCESS! Size price saved to cloud.`);
       }
 
-     async function saveGalleryPhoto() {
-  // 1. Check if your credentials are filled in
-  if (!CLOUDINARY_CLOUD_NAME || CLOUDINARY_CLOUD_NAME === "YOUR_CLOUD_NAME" || 
-      !CLOUDINARY_UPLOAD_PRESET || CLOUDINARY_UPLOAD_PRESET === "YOUR_UPLOAD_PRESET") {
-    alert("❌ STOP: You forgot to replace 'YOUR_CLOUD_NAME' or 'YOUR_UPLOAD_PRESET' with your actual Cloudinary details at the top of your script!");
-    return;
-  }
+      async function saveGalleryPhoto() {
+        const catSelect = document.getElementById("galleryCategory");
+        const fileInput = document.getElementById("imageFileInput");
 
-  const catSelect = document.getElementById("galleryCategory");
-  const fileInput = document.getElementById("imageFileInput");
+        if (!catSelect || !fileInput) {
+          alert("❌ Error: Missing category dropdown or file input element.");
+          return;
+        }
 
-  if (!catSelect || !fileInput) {
-    alert("❌ Error: Missing category dropdown or file input element on the page!");
-    return;
-  }
+        const cat = catSelect.value;
 
-  const cat = catSelect.value;
+        if (!fileInput.files || fileInput.files.length === 0) {
+          alert("⚠️ Please choose an image file first.");
+          return;
+        }
 
-  if (!fileInput.files || fileInput.files.length === 0) {
-    alert("⚠️ Please choose an image file first.");
-    return;
-  }
+        const file = fileInput.files[0];
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
 
-  const file = fileInput.files[0];
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("upload_preset", Jabaa_Advert);
+        alert("⏳ Uploading to Cloudinary cloud... Please wait.");
 
-  alert("⏳ Uploading to Cloudinary cloud... Please wait.");
+        try {
+          const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+            method: "POST",
+            body: formData,
+          });
+          const data = await response.json();
 
-  try {
-    const response = await fetch(`https://api.cloudinary.com/v1_1/${jayczq68}/image/upload`, {
-      method: "POST",
-      body: formData,
-    });
-    
-    const data = await response.json();
-
-    if (data.secure_url) {
-      const imageUrl = data.secure_url;
-      if (!globalDB.jabaa_gallery) globalDB.jabaa_gallery = {};
-      if (!globalDB.jabaa_gallery[cat]) globalDB.jabaa_gallery[cat] = [];
-      globalDB.jabaa_gallery[cat].push(imageUrl);
-      
-      await saveCloudDB();
-      fileInput.value = "";
-      if (typeof loadImagesForDeletion === "function") {
-        loadImagesForDeletion();
+          if (data.secure_url) {
+            const imageUrl = data.secure_url;
+            if (!globalDB.jabaa_gallery) globalDB.jabaa_gallery = {};
+            if (!globalDB.jabaa_gallery[cat]) globalDB.jabaa_gallery[cat] = [];
+            globalDB.jabaa_gallery[cat].push(imageUrl);
+            
+            await saveCloudDB();
+            fileInput.value = "";
+            if (typeof loadImagesForDeletion === "function") {
+              loadImagesForDeletion();
+            }
+            alert(`✅ SUCCESS! Photo uploaded to cloud and synced for "${cat}".`);
+          } else {
+            alert("❌ Cloudinary Error: " + (data.error?.message || JSON.stringify(data)));
+          }
+        } catch (err) {
+          console.error("Network Exception:", err);
+          alert("❌ Network Error connecting to Cloudinary. Check console.");
+        }
       }
-      alert(`✅ SUCCESS! Photo uploaded and synced globally for "${cat}".`);
-    } else {
-      alert("❌ Cloudinary Error: " + (data.error?.message || JSON.stringify(data)));
-    }
-  } catch (err) {
-    console.error("Network Exception:", err);
-    alert("❌ Network Error connecting to Cloudinary. Check console.");
-  }
-}
+
       async function addNewProduct() {
         const nameInput = document.getElementById("newProdName");
         const emojiInput = document.getElementById("selectedEmoji");
