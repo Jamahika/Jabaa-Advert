@@ -394,9 +394,13 @@
         alert(`✅ SUCCESS! Size price saved to cloud.`);
       }
 
-      async function saveGalleryPhoto() {
-  // 1. Force an immediate alert to prove the click works
-  alert("🟢 Upload button clicked!");
+     async function saveGalleryPhoto() {
+  // 1. Check if your credentials are filled in
+  if (!CLOUDINARY_CLOUD_NAME || CLOUDINARY_CLOUD_NAME === "YOUR_CLOUD_NAME" || 
+      !CLOUDINARY_UPLOAD_PRESET || CLOUDINARY_UPLOAD_PRESET === "YOUR_UPLOAD_PRESET") {
+    alert("❌ STOP: You forgot to replace 'YOUR_CLOUD_NAME' or 'YOUR_UPLOAD_PRESET' with your actual Cloudinary details at the top of your script!");
+    return;
+  }
 
   const catSelect = document.getElementById("galleryCategory");
   const fileInput = document.getElementById("imageFileInput");
@@ -448,7 +452,6 @@
     alert("❌ Network Error connecting to Cloudinary. Check console.");
   }
 }
-
       async function addNewProduct() {
         const nameInput = document.getElementById("newProdName");
         const emojiInput = document.getElementById("selectedEmoji");
