@@ -395,46 +395,59 @@
       }
 
       async function saveGalleryPhoto() {
-        const cat = document.getElementById("galleryCategory").value;
-        const fileInput = document.getElementById("imageFileInput");
+  // 1. Force an immediate alert to prove the click works
+  alert("🟢 Upload button clicked!");
 
-        if (!fileInput.files || fileInput.files.length === 0) {
-          alert("⚠️ Please choose an image file first.");
-          return;
-        }
+  const catSelect = document.getElementById("galleryCategory");
+  const fileInput = document.getElementById("imageFileInput");
 
-        const file = fileInput.files[0];
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("upload_preset", Jabaa_Advert);
+  if (!catSelect || !fileInput) {
+    alert("❌ Error: Missing category dropdown or file input element on the page!");
+    return;
+  }
 
-        alert("⏳ Uploading to Cloudinary cloud...");
+  const cat = catSelect.value;
 
-        try {
-          const response = await fetch(`https://api.cloudinary.com/v1_1/${jayczq68}/image/upload`, {
-            method: "POST",
-            body: formData,
-          });
-          const data = await response.json();
+  if (!fileInput.files || fileInput.files.length === 0) {
+    alert("⚠️ Please choose an image file first.");
+    return;
+  }
 
-          if (data.secure_url) {
-            const imageUrl = data.secure_url;
-            if (!globalDB.jabaa_gallery) globalDB.jabaa_gallery = {};
-            if (!globalDB.jabaa_gallery[cat]) globalDB.jabaa_gallery[cat] = [];
-            globalDB.jabaa_gallery[cat].push(imageUrl);
-            
-            await saveCloudDB();
-            fileInput.value = "";
-            loadImagesForDeletion();
-            alert(`✅ SUCCESS! Photo uploaded to cloud and synced.`);
-          } else {
-            alert("❌ Cloudinary Error: " + (data.error?.message || JSON.stringify(data)));
-          }
-        } catch (err) {
-          console.error(err);
-          alert("❌ Network Error connecting to Cloudinary.");
-        }
+  const file = fileInput.files[0];
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", Jabaa_Advert);
+
+  alert("⏳ Uploading to Cloudinary cloud... Please wait.");
+
+  try {
+    const response = await fetch(`https://api.cloudinary.com/v1_1/${jayczq68}/image/upload`, {
+      method: "POST",
+      body: formData,
+    });
+    
+    const data = await response.json();
+
+    if (data.secure_url) {
+      const imageUrl = data.secure_url;
+      if (!globalDB.jabaa_gallery) globalDB.jabaa_gallery = {};
+      if (!globalDB.jabaa_gallery[cat]) globalDB.jabaa_gallery[cat] = [];
+      globalDB.jabaa_gallery[cat].push(imageUrl);
+      
+      await saveCloudDB();
+      fileInput.value = "";
+      if (typeof loadImagesForDeletion === "function") {
+        loadImagesForDeletion();
       }
+      alert(`✅ SUCCESS! Photo uploaded and synced globally for "${cat}".`);
+    } else {
+      alert("❌ Cloudinary Error: " + (data.error?.message || JSON.stringify(data)));
+    }
+  } catch (err) {
+    console.error("Network Exception:", err);
+    alert("❌ Network Error connecting to Cloudinary. Check console.");
+  }
+}
 
       async function addNewProduct() {
         const nameInput = document.getElementById("newProdName");
