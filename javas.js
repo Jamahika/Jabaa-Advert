@@ -83,6 +83,7 @@ async function renderServices() {
 
   updateFormFields();
 }
+
 function updateFormFields() {
   const selectElement = document.getElementById("itemSelect");
   if (!selectElement) return;
