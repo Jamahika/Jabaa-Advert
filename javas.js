@@ -144,7 +144,7 @@ function updateFormFields() {
   } else {
     container.innerHTML += `<input type="text" id="sizeDetails" placeholder="Size/Details" class="w-full p-4 rounded-xl mb-4 border bg-slate-800 border-slate-700 text-white outline-none text-sm">`;
   }
-}
+} 
 
 async function openGallery(service) {
   await fetchCloudDB();
