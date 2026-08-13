@@ -83,7 +83,6 @@ async function renderServices() {
 
   updateFormFields();
 }
-
 function updateFormFields() {
   const selectElement = document.getElementById("itemSelect");
   if (!selectElement) return;
@@ -95,54 +94,44 @@ function updateFormFields() {
   container.innerHTML = "";
 
   const savedSizePrices = globalDB.jabaa_size_prices || {};
-  const customSizes = savedSizePrices[item];
+  const customSizes = savedSizePrices[item] || {};
 
   if (item !== "Wall Art") {
     container.innerHTML += `<input type="number" id="orderQuantity" placeholder="Quantity" class="w-full p-4 rounded-xl mb-4 border bg-slate-800 border-slate-700 text-white outline-none text-sm">`;
   }
 
-  if (item === "Stiker Photo" || item === "Epoxy" || customSizes) {
-    let optionsHTML = "";
-    if (customSizes && Object.keys(customSizes).length > 0) {
-      for (const [size, price] of Object.entries(customSizes)) {
-        optionsHTML += `<option value="${size} (${price})">${size} (${price})</option>`;
-      }
-    } else {
-      if (item === "Stiker Photo") {
-        optionsHTML = `
-          <option value="20*30 (300 Birr)">20*30 (300 Birr)</option>
-          <option value="40*50 (600 Birr)">40*50 (600 Birr)</option>
-          <option value="50*70 (800 Birr)">50*70 (800 Birr)</option>
-          <option value="50*80 (1000 Birr)">50*80 (1000 Birr)</option>
-        `;
-      } else if (item === "Epoxy") {
-        optionsHTML = `
-          <option value="20*30 (800 Birr)">20*30 (800 Birr)</option>
-          <option value="30*40 (1400 Birr)">30*40 (1400 Birr)</option>
-          <option value="40*50 (1800 Birr)">40*50 (1800 Birr)</option>
-          <option value="50*70 (2300 Birr)">50*70 (2300 Birr)</option>
-          <option value="50*80 (2600 Birr)">50*80 (2600 Birr)</option>
-        `;
-      }
-    }
+  // 1. Define standard hardcoded default sizes
+  let defaultSizes = {};
+  if (item === "Stiker Photo") {
+    defaultSizes = {
+      "20*30": "300 Birr",
+      "40*50": "600 Birr",
+      "50*70": "800 Birr",
+      "50*80": "1000 Birr"
+    };
+  } else if (item === "Epoxy") {
+    defaultSizes = {
+      "20*30": "800 Birr",
+      "30*40": "1400 Birr",
+      "40*50": "1800 Birr",
+      "50*70": "2300 Birr",
+      "50*80": "2600 Birr"
+    };
+  }
 
-    if (optionsHTML) {
-      container.innerHTML += `
-        <select id="sizeSelect" class="w-full p-4 rounded-xl mb-4 border bg-slate-800 border-slate-700 text-white outline-none text-sm">
-          ${optionsHTML}
-        </select>`;
-    } else if (item === "T-Shirt") {
-      container.innerHTML += `
-        <input type="text" id="tSize" placeholder="Size (e.g. S, M, L...)" class="w-full p-4 rounded-xl mb-4 border bg-slate-800 border-slate-700 text-white outline-none text-sm">
-        <select id="tColor" class="w-full p-4 rounded-xl mb-4 border bg-slate-800 border-slate-700 text-white outline-none text-sm">
-            <option value="Green">Green</option><option value="White">White</option><option value="Black">Black</option><option value="Red">Red</option><option value="Gray">Gray</option><option value="Blue">Blue</option><option value="Yellow">Yellow</option><option value="Burgundy">Burgundy</option>
-        </select>
-        <select id="tStyle" class="w-full p-4 rounded-xl mb-4 border bg-slate-800 border-slate-700 text-white outline-none text-sm">
-            <option value="Short Sleeve">Short Sleeve</option><option value="Long Sleeve">Long Sleeve</option>
-        </select>`;
-    } else {
-      container.innerHTML += `<input type="text" id="sizeDetails" placeholder="Size/Details" class="w-full p-4 rounded-xl mb-4 border bg-slate-800 border-slate-700 text-white outline-none text-sm">`;
+  // 2. Merge defaults with cloud updates so edited sizes update and old sizes stay intact
+  const finalSizes = { ...defaultSizes, ...customSizes };
+  const hasSizes = Object.keys(finalSizes).length > 0;
+
+  if (hasSizes) {
+    let optionsHTML = "";
+    for (const [size, price] of Object.entries(finalSizes)) {
+      optionsHTML += `<option value="${size} (${price})">${size} (${price})</option>`;
     }
+    container.innerHTML += `
+      <select id="sizeSelect" class="w-full p-4 rounded-xl mb-4 border bg-slate-800 border-slate-700 text-white outline-none text-sm">
+        ${optionsHTML}
+      </select>`;
   } else if (item === "T-Shirt") {
     container.innerHTML += `
       <input type="text" id="tSize" placeholder="Size (e.g. S, M, L...)" class="w-full p-4 rounded-xl mb-4 border bg-slate-800 border-slate-700 text-white outline-none text-sm">
@@ -153,7 +142,7 @@ function updateFormFields() {
           <option value="Short Sleeve">Short Sleeve</option><option value="Long Sleeve">Long Sleeve</option>
       </select>`;
   } else {
-    container.innerHTML += `<input type="text" id="sizeDetails" placeholder="Specifications / Details" class="w-full p-4 rounded-xl mb-4 border bg-slate-800 border-slate-700 text-white outline-none text-sm">`;
+    container.innerHTML += `<input type="text" id="sizeDetails" placeholder="Size/Details" class="w-full p-4 rounded-xl mb-4 border bg-slate-800 border-slate-700 text-white outline-none text-sm">`;
   }
 }
 
