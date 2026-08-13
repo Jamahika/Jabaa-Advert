@@ -200,26 +200,30 @@ function sendOrder() {
   const error = document.getElementById("validationError");
 
   if ((qty && !qty.value) || (size && !size.value)) {
-    error.style.display = "block";
+    if (error) error.style.display = "block";
     return;
   } else {
-    error.style.display = "none";
+    if (error) error.style.display = "none";
   }
 
   let message = `Hi Jabaa Printing and Advert! I'd like to order:\n- Item: ${item}`;
-  if (qty) message += `\n- Quantity: ${qty.value}`;
-  if (size) message += `\n- Details: ${size.value}`;
+  if (qty && qty.value) message += `\n- Quantity: ${qty.value}`;
+  if (size && size.value) message += `\n- Details: ${size.value}`;
 
   if (item === "T-Shirt" && document.getElementById("tColor")) {
     message += `\n- Color: ${document.getElementById("tColor").value}`;
     if (document.getElementById("tStyle"))
       message += `\n- Style: ${document.getElementById("tStyle").value}`;
   }
-  if (note) message += `\n- Notes: ${note}`;
+  if (note && note.value) message += `\n- Notes: ${note.value}`;
 
-  window.location.href = `https://t.me/Grace7PR?text=${encodeURIComponent(message)}`;
+  const telegramUrl = `https://t.me/Grace7PR?text=${encodeURIComponent(message)}`;
+
+  // Create a clean anchor element click to force Android browsers to open Telegram properly with data
+  const link = document.createElement('a');
+  link.href = telegramUrl;
+  link.target = '_blank';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }
-
-window.addEventListener("DOMContentLoaded", () => {
-  renderServices();
-});
