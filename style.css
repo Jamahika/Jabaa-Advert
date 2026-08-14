@@ -22,7 +22,7 @@ body {
   padding: 1rem;
 }
 .modal.active {
-  display: flex;
+  display: flex !important;
   opacity: 1;
   pointer-events: auto;
 }
