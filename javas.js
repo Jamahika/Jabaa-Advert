@@ -31,9 +31,10 @@ let globalDB = {
 async function fetchCloudDB() {
   try {
     const res = await fetch(
-      `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`,
+      `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest?t=${Date.now()}`,
       {
         headers: { "X-Master-Key": JSONBIN_API_KEY },
+        cache: "no-store",
       },
     );
     const json = await res.json();
@@ -52,8 +53,7 @@ function getActiveServices() {
   return all.filter((s) => !hiddenServices.includes(s.name));
 }
 
-async function renderServices() {
-  await fetchCloudDB();
+function renderServicesList(services) {
   const grid = document.getElementById("servicesGrid");
   const select = document.getElementById("itemSelect");
 
@@ -62,16 +62,14 @@ async function renderServices() {
   grid.innerHTML = "";
   select.innerHTML = "";
 
-  const services = getActiveServices();
-
   services.forEach((s) => {
     const card = document.createElement("div");
     card.className =
-      "cursor-pointer dark-card p-6 sm:p-8 rounded-2xl shadow-sm hover:border-blue-500 transition hover:-translate-y-1 text-center";
+      "cursor-pointer bg-slate-900 border border-slate-800 p-6 sm:p-8 rounded-2xl shadow-sm hover:border-blue-500 transition hover:-translate-y-1 text-center";
     card.onclick = () => openGallery(s.name);
     card.innerHTML = `
       <div class="text-4xl sm:text-5xl mb-4 sm:mb-6">${s.emoji}</div>
-      <h4 class="text-lg sm:text-xl font-bold mb-2">${s.name}</h4>
+      <h4 class="text-lg sm:text-xl font-bold mb-2 text-white">${s.name}</h4>
     `;
     grid.appendChild(card);
 
@@ -82,6 +80,15 @@ async function renderServices() {
   });
 
   updateFormFields();
+}
+
+async function initApp() {
+  // 1. Render immediately using local base services so mobile screen is never blank
+  renderServicesList(baseServices);
+
+  // 2. Fetch cloud data in background and re-render with custom products/hidden filters
+  await fetchCloudDB();
+  renderServicesList(getActiveServices());
 }
 
 function updateFormFields() {
@@ -101,7 +108,6 @@ function updateFormFields() {
     container.innerHTML += `<input type="number" id="orderQuantity" placeholder="Quantity" class="w-full p-4 rounded-xl mb-4 border bg-slate-800 border-slate-700 text-white outline-none text-sm">`;
   }
 
-  // 1. Define standard hardcoded default sizes
   let defaultSizes = {};
   if (item === "Stiker Photo") {
     defaultSizes = {
@@ -120,7 +126,6 @@ function updateFormFields() {
     };
   }
 
-  // 2. Merge defaults with cloud updates so edited sizes update and old sizes stay intact
   const finalSizes = { ...defaultSizes, ...customSizes };
   const hasSizes = Object.keys(finalSizes).length > 0;
 
@@ -219,11 +224,15 @@ function sendOrder() {
 
   const telegramUrl = `https://t.me/Grace7PR?text=${encodeURIComponent(message)}`;
 
-  // Create a clean anchor element click to force Android browsers to open Telegram properly with data
-  const link = document.createElement('a');
+  const link = document.createElement("a");
   link.href = telegramUrl;
-  link.target = '_blank';
+  link.target = "_blank";
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
 }
+
+// Auto-initialize when the webpage finishes loading
+window.addEventListener("DOMContentLoaded", () => {
+  initApp();
+});
