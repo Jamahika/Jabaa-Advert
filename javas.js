@@ -186,12 +186,19 @@ function closeGallery() {
 }
 
 function openImageModal(url) {
-  document.getElementById("fullSizeImg").src = url;
-  document.getElementById("imageModal").classList.add("active");
-}
+  const modalImg = document.getElementById("fullSizeImg");
+  const downloadBtn = document.getElementById("downloadBtn");
+  
+  modalImg.src = url;
+  
+  // Update the download link source
+  if (downloadBtn) {
+    downloadBtn.href = url;
+    // Optional: force attribute if cross-origin allows attachment download
+    downloadBtn.setAttribute("download", "jabaa-printing-sample.jpg");
+  }
 
-function closeImageModal() {
-  document.getElementById("imageModal").classList.remove("active");
+  document.getElementById("imageModal").classList.add("active");
 }
 
 function sendOrder() {
