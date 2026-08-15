@@ -193,31 +193,14 @@ function openImageModal(url) {
   
   // Update the download link source
   if (downloadBtn) {
-    downloadBtn.href = url;
-    // Optional: force attribute if cross-origin allows attachment download
     downloadBtn.setAttribute("download", "jabaa-printing-sample.jpg");
+    downloadBtn.href = url;
+    
+    // Optional: force attribute if cross-origin allows attachment download
+    
   }
 
   document.getElementById("imageModal").classList.add("active");
-}
-function downloadCurrentImage() {
-  const modalImg = document.getElementById("fullSizeImg");
-  let url = modalImg ? modalImg.src : "";
-  
-  if (!url) return;
-
-  // Automatically inject Cloudinary's direct download flag into the URL
-  if (url.includes("cloudinary.com") && url.includes("/upload/")) {
-    url = url.replace("/upload/", "/upload/fl_attachment/");
-  }
-
-  // Create a direct download link
-  const link = document.createElement("a");
-  link.href = url;
-  link.setAttribute("download", "jabaa-printing-sample.jpg");
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
 }
 function sendOrder() {
   const item = document.getElementById("itemSelect").value;
